@@ -5,7 +5,8 @@
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/DamageType.h"
 #include "Particles/ParticleSystemComponent.h"
-//#include "HealthComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "HealthComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "DamageHandlerComponent.h"
 
@@ -15,7 +16,7 @@ ASpiderCharacter::ASpiderCharacter()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	//HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 	DamageHandlerComponent = CreateDefaultSubobject<UDamageHandlerComponent>(TEXT("DamageHandlerComponent"));
 	ParticleSystemComponent = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("ParticleSystemComponent"));
 	ParticleSystemComponent->SetupAttachment(RootComponent);
@@ -59,26 +60,26 @@ void ASpiderCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 void ASpiderCharacter::FellOutOfWorld(const class UDamageType& dmgType)
 {
-	//if (HealthComponent && !HealthComponent->IsDead())
-	//{
-	//	HealthComponent->SetCurrentHealth(0.0f);
-	//	OnDeath(true);
-	//}
+	if (HealthComponent && !HealthComponent->IsDead())
+	{
+		HealthComponent->SetCurrentHealth(0.0f);
+		OnDeath(true);
+	}
 }
 
 float ASpiderCharacter::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
 {
 	float Damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	UE_LOG(LogTemp, Warning, TEXT("AAbstraction PlayerCharacter:: TakeDamage Damage %.2f"), Damage);
-	//if (HealthComponent && !HealthComponent->IsDead())
-	//{
-	//	HealthComponent->TakeDamage(Damage);
-	//	if (HealthComponent->IsDead())
-	//	{
-	//		TogglePostProcess();
-	//		OnDeath(false);
-	//	}
-	//}
+	if (HealthComponent && !HealthComponent->IsDead())
+	{
+		HealthComponent->TakeDamage(Damage);
+		if (HealthComponent->IsDead())
+		{
+			TogglePostProcess();
+			OnDeath(false);
+		}
+	}
 
 	return Damage;
 }
@@ -109,19 +110,19 @@ void ASpiderCharacter::StopInteraction()
 
 const bool ASpiderCharacter::IsAlive() const
 {
-	//if (HealthComponent)
-	//{
-	//	return !HealthComponent->IsDead();
-	//}
+	if (HealthComponent)
+	{
+		return !HealthComponent->IsDead();
+	}
 	return false;
 }
 
 const float ASpiderCharacter::GetCurrentHealth() const
 {
-	//if (HealthComponent)
-	//{
-	//	return HealthComponent->GetCurrentHealth();
-	//}
+	if (HealthComponent)
+	{
+		return HealthComponent->GetCurrentHealth();
+	}
 	return 0.0f;
 }
 
@@ -134,5 +135,15 @@ void ASpiderCharacter::HandleItemCollected()
 	PC->PlayDynamicForceFeedback(ForceFeedBackIntensity, ForceFeedbackDuration, true, false, true, false, EDynamicForceFeedbackAction::Start);
 
 	ItemCollected();
+}
+
+void ASpiderCharacter::RequestSprintStart()
+{
+	GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+}
+
+void ASpiderCharacter::RequestSprintEnd()
+{
+	GetCharacterMovement()->MaxWalkSpeed = MaxWalkSpeed;
 }
 

@@ -10,6 +10,7 @@
 
 class UParticleSystemComponent;
 class UDamageHandlerComponent;
+class UHealthComponent;
 
 DECLARE_MULTICAST_DELEGATE(FOnInteractionStart);
 DECLARE_MULTICAST_DELEGATE(FOnInteractionCancel);
@@ -29,8 +30,8 @@ protected:
 
 	void OnDeath(bool IsFellOut);
 
-	//UPROPERTY(EditAnywhere)
-	//	UHealthComponent* HealthComponent;
+	UPROPERTY(EditAnywhere)
+		UHealthComponent* HealthComponent;
 
 	UPROPERTY(EditAnywhere)
 		UDamageHandlerComponent* DamageHandlerComponent;
@@ -80,6 +81,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		int ItemsCollected = 0;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		float MaxWalkSpeed = 50.00;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		float SprintSpeed = 100.00;
+
 	UPROPERTY(EditAnywhere)
 		UParticleSystemComponent* ParticleSystemComponent;
 
@@ -96,5 +103,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void OnDeathTimerFinished();
+
+	void RequestSprintStart();
+	void RequestSprintEnd();
 
 };
