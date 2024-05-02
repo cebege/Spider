@@ -81,10 +81,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		int ItemsCollected = 0;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float MaxWalkSpeed = 50.00;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		float SprintSpeed = 100.00;
 
 	UPROPERTY(EditAnywhere)

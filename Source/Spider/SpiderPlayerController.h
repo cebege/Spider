@@ -38,10 +38,10 @@ protected:
 	// Movement:
 
 	UPROPERTY(EditAnywhere, Category = "Movement")
-		float MaxWalkSpeed = 400.0f;
+		float MaxWalkSpeed = 2500.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Movement")
-		float SprintSpeed = 1000.0f;
+		float SprintSpeed = 5000.0f;
 
 	//UPROPERTY(EditAnywhere, Category = "Movement")
 	//	float TurnSpeed = 450.0f;
@@ -67,10 +67,10 @@ protected:
 
 	//Move
 	void RequestMoveForward(float AxisValue);
-	//void RequestMoveRight(float AxisValue);
+	void RequestMoveRight(float AxisValue);
 
 	//Turn
-	void RequestTurn(float AxisValue);
+	//void RequestTurn(float AxisValue);
 
 	//Look
 	void RequestLookUp(float AxisValue);

@@ -24,14 +24,14 @@ void ASpiderPlayerController::SetupInputComponent()
 
 		//Move
 		InputComponent->BindAxis(TEXT("MoveForward"), this, &ASpiderPlayerController::RequestMoveForward);
-		//InputComponent->BindAxis(TEXT("MoveRight"), this, &ATantrumPlayerController::RequestMoveRight);
+		InputComponent->BindAxis(TEXT("MoveRight"), this, &ASpiderPlayerController::RequestMoveRight);
 
 		//Look
 		InputComponent->BindAxis(TEXT("LookUp"), this, &ASpiderPlayerController::RequestLookUp);
 		InputComponent->BindAxis(TEXT("LookRight"), this, &ASpiderPlayerController::RequestLookRight);
 
 		//Turn
-		InputComponent->BindAxis(TEXT("Turn"), this, &ASpiderPlayerController::RequestTurn);
+		//InputComponent->BindAxis(TEXT("Turn"), this, &ASpiderPlayerController::RequestTurn);
 
 		// Mouse Wheel Zoom In / Zoom Out
 		InputComponent->BindAxis(TEXT("MouseWheelAxis"), this, &ASpiderPlayerController::HandleCameraZoom);
@@ -102,27 +102,27 @@ void ASpiderPlayerController::HandleCameraZoom(float AxisValue)
 	}
 }
 
-//void ATantrumPlayerController::RequestMoveRight(float AxisValue)
-//{
-// 	if(!GameModeRef || GameModeRef->GetCurrentGameState() != EGameState::Playing) {return;}
-//	if (AxisValue != 0.0f)
-//	{
-//		FRotator const ControlSpaceRot = GetControlRotation();
-//		GetPawn()->AddMovementInput(FRotationMatrix(ControlSpaceRot).GetScaledAxis(EAxis::Y), AxisValue);
-//	}
-//}
-
-void ASpiderPlayerController::RequestTurn(float AxisValue)
+void ASpiderPlayerController::RequestMoveRight(float AxisValue)
 {
+ 	//if(!GameModeRef || GameModeRef->GetCurrentGameState() != EGameState::Playing) {return;}
 	if (AxisValue != 0.0f)
 	{
-		AddYawInput(AxisValue * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+		FRotator const ControlSpaceRot = GetControlRotation();
+		GetPawn()->AddMovementInput(FRotationMatrix(ControlSpaceRot).GetScaledAxis(EAxis::Y), AxisValue);
 	}
 }
 
+//void ASpiderPlayerController::RequestTurn(float AxisValue)
+//{
+//	if (AxisValue != 0.0f)
+//	{
+//		AddYawInput(AxisValue * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+//	}
+//}
+
 void ASpiderPlayerController::RequestLookUp(float AxisValue)
 {
-	if (bIsAligningCharacter && AxisValue != 0.0f)
+	if (AxisValue != 0.0f)
 	{
 		AddPitchInput(AxisValue * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 	}
@@ -130,7 +130,7 @@ void ASpiderPlayerController::RequestLookUp(float AxisValue)
 
 void ASpiderPlayerController::RequestLookRight(float AxisValue)
 {
-	if (bIsAligningCharacter && AxisValue != 0.0f)
+	if (AxisValue != 0.0f)
 	{
 		AddYawInput(AxisValue * BaseLookRightRate * GetWorld()->GetDeltaSeconds());
 	}
@@ -190,7 +190,6 @@ void ASpiderPlayerController::RequestJump()
 	if (GetCharacter())
 	{
 		GetCharacter()->Jump();
-
 		//SoundCue Triggers
 		//if (JumpSound && GetCharacter()->GetCharacterMovement()->IsMovingOnGround())
 		//{
@@ -250,7 +249,6 @@ void ASpiderPlayerController::RequestCrouchEnd()
 
 void ASpiderPlayerController::RequestSprintStart()
 {
-
 	if (ASpiderCharacter* SpiderCharacter = Cast<ASpiderCharacter>(GetCharacter()))
 	{
 		SpiderCharacter->RequestSprintStart();
